@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Azadeh Khojandi & Jordan Knight - DX Australia ",
+      "authorEmail": "azkhojan@microsoftcom;Jordan.Knight@microsoft.com",
+      "authorUrl": "http://azadehkhojandi.blogspot.com.au/"
+    }
+  }
+}
