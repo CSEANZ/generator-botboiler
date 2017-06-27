@@ -18,9 +18,13 @@ Then generate your new project:
 yo botboiler
 ```
 
-## How to run the chat bot
+## How to transpile typescript files 
 
-- npm start
+- go to src folder and run tsc 
+
+## How to run the bot 
+
+-  node output/run/app.js
 
 ## Bot Framework Emulator
 
