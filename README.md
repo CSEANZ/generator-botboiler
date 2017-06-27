@@ -1,8 +1,7 @@
-# generator-nodechatbot [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> it&#39;s a boiler plate for building chat bot with node, type script, Azure functions and microsoft bot builder
+# generator-botboiler [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
+> Yeoman Generator for the BotBoiler base code, it&#39;s a boiler plate for building chat bot with node, type script, Azure functions and microsoft bot builder
 
-# generator-botboiler
-Yeoman Generator for the BotBoiler base code
+
 
 ## Installation
 
