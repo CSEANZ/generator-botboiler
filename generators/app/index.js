@@ -100,7 +100,7 @@ module.exports = class extends Generator {
     //preparing the list of tasks:
     this.tasks = [];
     this.tasks.push({ cmd: 'npm', args: ['install'] });
-    //this.tasks.push({cmd: 'tsc'}); //todo az - need to change directory
+    this.tasks.push({cmd: 'tsc', args: ['-p', './src']}); //todo az - need to change directory
 
     //start first task
     this.processTask(this.tasks.shift());
