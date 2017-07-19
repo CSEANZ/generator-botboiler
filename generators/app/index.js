@@ -6,9 +6,10 @@ const path = require('path');
 module.exports = class extends Generator {
 
   prompting() {
+
     // Have Yeoman greet the user.
     this.log(yosay(
-     chalk.white.bgRed.bold('botboiler generator') + ' helps you to start building a bot by using ' + chalk.underline.bgBlue('Node js') + ", " + chalk.underline.bgBlue('Typescript') + ", " + chalk.underline.bgBlue('Azure Functions') + " and " + chalk.underline.bgBlue('Microsoft bot builder')
+      chalk.white.bgRed.bold('botboiler generator') + ' helps you to start building a bot by using ' + chalk.underline.bgBlue('Node js') + ", " + chalk.underline.bgBlue('Typescript') + ", " + chalk.underline.bgBlue('Azure Functions') + " and " + chalk.underline.bgBlue('Microsoft bot builder')
 
     ));
     //todo az add validation on the name -> it shouldn't have space in the name
@@ -24,49 +25,59 @@ module.exports = class extends Generator {
       // To access props later use this.props.someAnswer;
       this.props = props;
     });
+
   }
 
-  writing() {
-    //todo az refactor
+  updatePackage() {
 
-    var destinationfolder = this.destinationRoot();
-    this.log("copying files to " + destinationfolder);
-    //Copy the configuration files
+    var botname=this.props.name.replace(/\s+/g, '-');
 
     this.fs.copyTpl(
-        this.templatePath('_package.json'),
-        this.destinationPath('package.json'), {
-          name: this.props.name
-        }
+      this.templatePath('_package.json'),
+      this.destinationPath('package.json'), {
+        name: botname
+      }
     );
 
+  }
+  copySrouceCode() {
 
-    // Copy all files
-    this.fs.copy(
-       this.templatePath('src/*.*'),
-       destinationfolder + '/src'
-     );
-    this.fs.copy(
-      this.templatePath('src/contract'),
-      destinationfolder + '/src/contract'
-    );
-    this.fs.copy(
-   this.templatePath('src/dialogs'),
-   destinationfolder + '/src/dialogs'
- );
-    this.fs.copy(
-   this.templatePath('src/helpers'),
-   destinationfolder + '/src/helpers'
- );
-    this.fs.copy(
-      this.templatePath('src/services'),
-      destinationfolder + '/src/services'
-    );
+    var self = this;
 
-    this.fs.copy(
-      this.templatePath('tests'),
-      destinationfolder + '/tests'
-    );
+    var source = path.join(this.sourceRoot(), '/src');
+    var destination = path.join(this.destinationRoot(), '/src');
+
+    var ncp = require('ncp').ncp;
+    //ncp.limit = 16;
+    this.log('coping *.* from ' + source + ' to ' + destination);
+    ncp(source, destination, function (err) {
+
+      if (err) {
+        self.log('something went wrong: ' + err);
+
+      }
+      self.log('done');
+    });
+
+  }
+
+  copyTests() {
+
+    var self = this;
+    var sourcetests = path.join(this.sourceRoot(), '/tests');
+    var destinationtests = path.join(this.destinationRoot(), '/tests');
+
+    var ncptests = require('ncp').ncp;
+    ncptests.limit = 16;
+    this.log('coping *.* from ' + sourcetests + ' to ' + destinationtests);
+    ncptests(sourcetests, destinationtests, function (err) {
+
+      if (err) {
+        self.log('something went wrong: ' + err);
+      }
+      self.log('all files and folders in ' + sourcetests + ' copied to ' + destinationtests);
+
+    });
 
   }
 
@@ -77,13 +88,13 @@ module.exports = class extends Generator {
       this.log(task.cmd + ((task.args !== undefined) ? (" " + task.args) : ""));
 
       this.spawnCommand(task.cmd, task.args)
-      .on('exit', function (err) {
-        if (err) {
-          this.log.error('task failed. Error: ' + err);
-        } else {
-          this.emit('nextTask');
-        }
-      }.bind(this));
+        .on('exit', function (err) {
+          if (err) {
+            this.log.error('task failed. Error: ' + err);
+          } else {
+            this.emit('nextTask');
+          }
+        }.bind(this));
 
 
     };
@@ -100,7 +111,7 @@ module.exports = class extends Generator {
     //preparing the list of tasks:
     this.tasks = [];
     this.tasks.push({ cmd: 'npm', args: ['install'] });
-    this.tasks.push({cmd: 'tsc', args: ['-p', './src']}); //todo az - need to change directory
+    // this.tasks.push({cmd: 'tsc', args: ['-p', './src']}); //todo az - need to change directory
 
     //start first task
     this.processTask(this.tasks.shift());

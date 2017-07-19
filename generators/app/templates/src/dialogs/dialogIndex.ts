@@ -1,4 +1,6 @@
 
-import someBasicDialog from './botDialogs/someBasicDialog';
+import someBasicDialog from './samples/someBasicDialog';
+import luisDialog from './samples/luisDIalog';
+import qnaDialog from './samples/qnaDialog';
 
-export {someBasicDialog};
+export {someBasicDialog, luisDialog, qnaDialog}; 
