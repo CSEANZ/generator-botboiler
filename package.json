@@ -1,6 +1,6 @@
 {
   "name": "generator-botboiler",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "bot generator using botbuilder, typescript ",
   "homepage": "",
   "author": {
