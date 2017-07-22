@@ -60,7 +60,46 @@ module.exports = class extends Generator {
     });
 
   }
+copyVscode() {
 
+    var self = this;
+
+    var source = path.join(this.sourceRoot(), '/.vscode');
+    var destination = path.join(this.destinationRoot(), '/.vscode');
+
+    var ncp = require('ncp').ncp;
+    //ncp.limit = 16;
+    this.log('coping *.* from ' + source + ' to ' + destination);
+    ncp(source, destination, function (err) {
+
+      if (err) {
+        self.log('something went wrong: ' + err);
+
+      }
+      self.log('done');
+    });
+
+  }
+  copyDocs() {
+
+    var self = this;
+
+    var source = path.join(this.sourceRoot(), '/docs');
+    var destination = path.join(this.destinationRoot(), '/docs');
+
+    var ncp = require('ncp').ncp;
+    //ncp.limit = 16;
+    this.log('coping *.* from ' + source + ' to ' + destination);
+    ncp(source, destination, function (err) {
+
+      if (err) {
+        self.log('something went wrong: ' + err);
+
+      }
+      self.log('done');
+    });
+
+  }
   copyTests() {
 
     var self = this;
