@@ -3,6 +3,7 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 const path = require('path');
+const fs = require('fs');
 module.exports = class extends Generator {
 
   prompting() {
@@ -28,6 +29,39 @@ module.exports = class extends Generator {
 
   }
 
+  copyfiles()
+  {
+    
+   
+      var self = this;
+      self.log('copying files ...');
+
+      var folders= fs.readdirSync(this.sourceRoot())
+        .filter(file => fs.lstatSync(path.join(this.sourceRoot(), file)).isDirectory());
+
+        folders.forEach(function(folder) {
+          
+         self.log('folder...' +folder);
+
+          var source = path.join(this.sourceRoot(), '/'+folder);
+          var destination = path.join(this.destinationRoot(), '/'+folder);
+
+          var ncp = require('ncp').ncp;
+          //ncp.limit = 16;
+          self.log('coping *.* from ' + source + ' to ' + destination);
+          ncp(source, destination, function (err) {
+
+            if (err) {
+              self.log('something went wrong: ' + err);
+
+            }
+            self.log('done');
+          });
+
+        }, this);
+    
+
+  }
   updatePackage() {
 
     var botname=this.props.name.replace(/\s+/g, '-');
@@ -40,85 +74,97 @@ module.exports = class extends Generator {
     );
 
   }
-  copySrouceCode() {
+  updateEnv() {
 
-    var self = this;
 
-    var source = path.join(this.sourceRoot(), '/src');
-    var destination = path.join(this.destinationRoot(), '/src');
-
-    var ncp = require('ncp').ncp;
-    //ncp.limit = 16;
-    this.log('coping *.* from ' + source + ' to ' + destination);
-    ncp(source, destination, function (err) {
-
-      if (err) {
-        self.log('something went wrong: ' + err);
-
+    this.fs.copy(
+      this.templatePath('.env'),
+      this.destinationPath('.env'), {
       }
-      self.log('done');
-    });
+    );
 
   }
-copyVscode() {
 
-    var self = this;
 
-    var source = path.join(this.sourceRoot(), '/.vscode');
-    var destination = path.join(this.destinationRoot(), '/.vscode');
+//   copySrouceCode() {
 
-    var ncp = require('ncp').ncp;
-    //ncp.limit = 16;
-    this.log('coping *.* from ' + source + ' to ' + destination);
-    ncp(source, destination, function (err) {
+//     var self = this;
 
-      if (err) {
-        self.log('something went wrong: ' + err);
+//     var source = path.join(this.sourceRoot(), '/src');
+//     var destination = path.join(this.destinationRoot(), '/src');
 
-      }
-      self.log('done');
-    });
+//     var ncp = require('ncp').ncp;
+//     //ncp.limit = 16;
+//     this.log('coping *.* from ' + source + ' to ' + destination);
+//     ncp(source, destination, function (err) {
 
-  }
-  copyDocs() {
+//       if (err) {
+//         self.log('something went wrong: ' + err);
 
-    var self = this;
+//       }
+//       self.log('done');
+//     });
 
-    var source = path.join(this.sourceRoot(), '/docs');
-    var destination = path.join(this.destinationRoot(), '/docs');
+//   }
+// copyVscode() {
 
-    var ncp = require('ncp').ncp;
-    //ncp.limit = 16;
-    this.log('coping *.* from ' + source + ' to ' + destination);
-    ncp(source, destination, function (err) {
+//     var self = this;
 
-      if (err) {
-        self.log('something went wrong: ' + err);
+//     var source = path.join(this.sourceRoot(), '/.vscode');
+//     var destination = path.join(this.destinationRoot(), '/.vscode');
 
-      }
-      self.log('done');
-    });
+//     var ncp = require('ncp').ncp;
+//     //ncp.limit = 16;
+//     this.log('coping *.* from ' + source + ' to ' + destination);
+//     ncp(source, destination, function (err) {
 
-  }
-  copyTests() {
+//       if (err) {
+//         self.log('something went wrong: ' + err);
 
-    var self = this;
-    var sourcetests = path.join(this.sourceRoot(), '/tests');
-    var destinationtests = path.join(this.destinationRoot(), '/tests');
+//       }
+//       self.log('done');
+//     });
 
-    var ncptests = require('ncp').ncp;
-    ncptests.limit = 16;
-    this.log('coping *.* from ' + sourcetests + ' to ' + destinationtests);
-    ncptests(sourcetests, destinationtests, function (err) {
+//   }
+//   copyDocs() {
 
-      if (err) {
-        self.log('something went wrong: ' + err);
-      }
-      self.log('all files and folders in ' + sourcetests + ' copied to ' + destinationtests);
+//     var self = this;
 
-    });
+//     var source = path.join(this.sourceRoot(), '/docs');
+//     var destination = path.join(this.destinationRoot(), '/docs');
 
-  }
+//     var ncp = require('ncp').ncp;
+//     //ncp.limit = 16;
+//     this.log('coping *.* from ' + source + ' to ' + destination);
+//     ncp(source, destination, function (err) {
+
+//       if (err) {
+//         self.log('something went wrong: ' + err);
+
+//       }
+//       self.log('done');
+//     });
+
+//   }
+//   copyTests() {
+
+//     var self = this;
+//     var sourcetests = path.join(this.sourceRoot(), '/tests');
+//     var destinationtests = path.join(this.destinationRoot(), '/tests');
+
+//     var ncptests = require('ncp').ncp;
+//     ncptests.limit = 16;
+//     this.log('coping *.* from ' + sourcetests + ' to ' + destinationtests);
+//     ncptests(sourcetests, destinationtests, function (err) {
+
+//       if (err) {
+//         self.log('something went wrong: ' + err);
+//       }
+//       self.log('all files and folders in ' + sourcetests + ' copied to ' + destinationtests);
+
+//     });
+
+//   }
 
   install() {
 
