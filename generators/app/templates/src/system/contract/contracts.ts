@@ -26,6 +26,26 @@ interface IDialog {
     name: string;
     trigger: string | RegExp;
     waterfall: builder.IDialogWaterfallStep[];
+    init?:(dialog:graphDialog) => boolean;
+}
+
+interface graphDialog{
+    data?:dialogData;
+    isLuis:boolean;
+    triggerText?:string;
+    triggerRegex?:RegExp;
+    id:string; 
+    initialSay?:string;   
+}
+
+interface dialogData{
+    fields?:Array<dialogField>;
+}
+
+interface dialogField{
+    //text that will ask if the field is missing
+    promptText:string;
+    luisEntityName?:string;
 }
 
 let contractSymbols = {
@@ -33,7 +53,9 @@ let contractSymbols = {
     IConfig: Symbol("IConfig"),
     IHostService: Symbol("IHostService"),
     IBotService: Symbol("IBotService"), 
-    INetClient: Symbol("INetClient")
+    INetClient: Symbol("INetClient"),
+    dataDialog: Symbol("dataDialog")
 }
 
-export {contractSymbols, ILogService, IHostService, IBotService, IDialog, INetClient};
+export {contractSymbols, ILogService, IHostService, IBotService, IDialog, INetClient,
+    graphDialog, dialogData, dialogField};
