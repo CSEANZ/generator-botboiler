@@ -1,11 +1,12 @@
 # generator-botboiler [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> Yeoman Generator for the BotBoiler base code, it&#39;s a boiler plate for building chat bot with node, type script, Azure functions and microsoft bot builder
+
+> Enterprise boilerplate code for TypeScript based bots built with the Microsoft Botbuilder framework
 
 
 
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) and generator-nodechatbot using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+First, install [Yeoman](http://yeoman.io) and generator-botboiler using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
 ```bash
 npm install -g yo
@@ -47,7 +48,7 @@ download link  http://emulator.botframework.com
 
 ## License
 
-MIT © [Azadeh Khojandi](http://azadehkhojandi.blogspot.com.au/) , [Jordan Knight](https://blogs.msdn.microsoft.com/devux/)
+MIT © [Azadeh Khojandi](http://azadehkhojandi.blogspot.com.au/) , [Jordan Knight](https://github.com/jakkaj)
 
 
 [npm-image]: https://badge.fury.io/js/generator-nodechatbot.svg
