@@ -2,7 +2,7 @@
 
 > Enterprise boilerplate code for TypeScript based bots built with the Microsoft Botbuilder framework
 
-
+For full instructions on how to use this head over to the [main botboiler repo on GitHub](https://github.com/MSFTAuDX/BotBoiler).
 
 ## Installation
 
@@ -19,32 +19,7 @@ Then generate your new project:
 yo botboiler
 ```
 
-## How to transpile typescript files 
-
-- go to src folder and run tsc 
-
-## How to run the bot 
-
--  node output/run/app.js
-
-## Bot Framework Emulator
-
-The Bot Framework Emulator is a desktop application that allows you to test and debug you bots, either locally or remotely.
-Using the emulator, you can chat with your bot and inspect the messages that your bot sends and receives.
-download link  http://emulator.botframework.com
-
-## Getting To Know Bot Framework
-
-- [Bot Framework](https://dev.botframework.com/)
-- [Bot Framework Documentation](https://docs.botframework.com/)
-- [Microsoft Virtual Academy](http://aka.ms/botcourse)
-
-## Getting To Know Yeoman
-
- * Yeoman has a heart of gold.
- * Yeoman is a person with feelings and opinions, but is very easy to work with.
- * Yeoman can be too opinionated at times but is easily convinced not to be.
- * Feel free to [learn more about Yeoman](http://yeoman.io/).
+Once you've done that check out the [getting started guide](https://github.com/MSFTAuDX/BotBoiler).
 
 ## License
 
