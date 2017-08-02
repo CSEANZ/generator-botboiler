@@ -4,9 +4,9 @@
   "description": "bot generator using botbuilder, typescript ",
   "homepage": "",
   "author": {
-    "name": "Azadeh Khojandi & Jordan Knight - DX Australia ",
-    "email": "azkhojan@microsoftcom;Jordan.Knight@microsoft.com",
-    "url": "http://azadehkhojandi.blogspot.com.au/"
+    "name": "Azadeh Khojandi & Jordan Knight - CSE Australia and New Zealand",
+    "email": "azkhojan@microsoft.com;Jordan.Knight@microsoft.com",
+    "url": "https://github.com/MSFTAuDX/BotBoiler"
   },
   "files": [
     "generators"
