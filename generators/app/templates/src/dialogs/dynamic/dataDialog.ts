@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import * as builder from 'botbuilder';
 
 import { serviceBase } from './../../system/services/serviceBase';
@@ -15,12 +15,13 @@ import dynamicDialogBase from './dynamicDialogBase';
 export default class dataDialog extends dynamicDialogBase{    
     name: string = "dataDialog";
     private _dialog:contracts.graphDialog;
-
+    private _netClient:contracts.INetClient
     /**
      *
      */
-    constructor() {
+    constructor(@inject(contracts.contractSymbols.INetClient) netClient:contracts.INetClient) {
         super();
+        this._netClient = netClient;
         this.waterfall = new Array<builder.IDialogWaterfallStep>();
     }
     /**
@@ -63,9 +64,17 @@ export default class dataDialog extends dynamicDialogBase{
         if(this._dialog.data && this._dialog.data.fields && this._dialog.data.fields.length > 0){
             for(let i in this._dialog.data.fields){
                 let field = this._dialog.data.fields[i];
-                let step = this.collectDataStep(field.luisEntityName, field.promptText, previousFieldName);
+
+                let step: builder.IDialogWaterfallStepl = null;
+
+                if(field.choice && field.choice.length > 0){
+                    step = this.collectChoiceStep(field.entityName, field.promptText,field.choice, previousFieldName);
+                }else{
+                    step = this.collectDataStep(field.entityName, field.promptText, previousFieldName);
+                }
+               
                 this.waterfall.push(step.bind(this));
-                previousFieldName = field.luisEntityName;
+                previousFieldName = field.entityName;
             }
         }       
 
@@ -115,14 +124,14 @@ export default class dataDialog extends dynamicDialogBase{
 
         if(!args || !args.intent || !args.intent.entities){
             return;
-        }
+        }        
 
         for(let i in this._dialog.data.fields){
             let field = this._dialog.data.fields[i];
-            let entity = builder.EntityRecognizer.findEntity(args.intent.entities, field.luisEntityName);
+            let entity = builder.EntityRecognizer.findEntity(args.intent.entities, field.entityName);
             
             if(entity && entity.entity){
-                session.dialogData[field.luisEntityName] = entity.entity;
+                session.dialogData[field.entityName] = entity.entity;
             }
         }         
     }
@@ -144,7 +153,36 @@ export default class dataDialog extends dynamicDialogBase{
         };
     } 
 
-    
+    private _setPreviousStep(session: builder.Session, results:builder.IDialogResult<string>, previousFieldName?:string){
+        if(previousFieldName && results && results.response){
+
+            var res = JSON.stringify(results.response);
+
+            console.log(res);
+
+            let data:any = results.response;
+
+            if(data.entity){
+                data = data.entity;
+            }
+
+            session.dialogData[previousFieldName] = data;
+            session.send(`Setting ${previousFieldName} to ${data}`);
+        }
+    }
+
+    collectChoiceStep(fieldName:string, promptText:string, choice:string[], previousFieldName?:string){
+        return (session: builder.Session, results:builder.IDialogResult<string>, next:Function) =>{
+            this._setPreviousStep(session, results, previousFieldName);
+
+            if(!session.dialogData[fieldName]){                
+                builder.Prompts.choice(session, promptText, choice);
+            }else{
+                next();
+            }
+        }
+    }
+
     /**
      * Collect missing data that was not yet available in the session dialogData
      * @param  {string} fieldName
@@ -154,10 +192,7 @@ export default class dataDialog extends dynamicDialogBase{
     collectDataStep(fieldName:string, promptText:string, previousFieldName?:string){
         return (session: builder.Session, results:builder.IDialogResult<string>, next:Function) =>{
             
-            if(previousFieldName && results && results.response){
-                session.dialogData[previousFieldName] = results.response;
-                session.send(`Setting ${previousFieldName} to ${results.response}`);
-            }
+            this._setPreviousStep(session, results, previousFieldName);
             
             if(!session.dialogData[fieldName]){                
                 builder.Prompts.text(session, promptText);
@@ -171,14 +206,23 @@ export default class dataDialog extends dynamicDialogBase{
      * @param  {string} previousFieldName?
      */
     executeUponDataStep(previousFieldName?:string){
-        return (session: builder.Session, results:builder.IDialogResult<string>, next:Function) =>{
+        return async (session: builder.Session, results:builder.IDialogResult<string>, next:Function) =>{
             
-            if(previousFieldName && results && results.response){
-                session.dialogData[previousFieldName] = results.response;
-                session.send(`Setting ${previousFieldName} to ${results.response}`);
+            this._setPreviousStep(session, results, previousFieldName);
+
+            if(this._dialog.action){
+                var action = this._dialog.action;
+
+                if(action.serviceUrlAfter){                   
+
+                    var result = await this._netClient.postJson<any, contracts.serviceResult>(action.serviceUrlAfter, "", session.dialogData);
+                    if(result.text){
+                        session.send(result.text);
+                    }
+                }
             }
-            
-            session.endDialog(`Okay ended the dialog with ${session.dialogData['category']}`);
+
+            session.endDialog(`Okay ended the dialog with ${session.dialogData[previousFieldName]}`);
         };
     }
 

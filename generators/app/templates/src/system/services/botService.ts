@@ -52,13 +52,17 @@ export class botService extends serviceBase implements contracts.IBotService {
             this._bot.dialog(dialog.id, dialog.waterfall).triggerAction({ matches: dialog.trigger });
         }
 
-        var dDynamic:contracts.IDialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);
+        var dlThings: contracts.graphDialog[] = new Array<contracts.graphDialog>();
+        dlThings.push(this.getStartOrderDialogData());
+        dlThings.push(this.getOpeningTimesDialogData());
+        
 
-        var dialogConfig = this.getTestDialogData();
-
-        dDynamic.init(dialogConfig);
-
-        this._bot.dialog(dDynamic.id, dDynamic.waterfall).triggerAction({ matches: dDynamic.trigger })
+        for(let i in dlThings){
+            let dialogConfig = dlThings[i];
+            let dDynamic:contracts.IDialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);           
+            dDynamic.init(dialogConfig);
+            this._bot.dialog(dDynamic.id, dDynamic.waterfall).triggerAction({ matches: dDynamic.trigger });
+        }        
     }
 
     /**
@@ -78,7 +82,7 @@ export class botService extends serviceBase implements contracts.IBotService {
     getTestDialogData(): contracts.graphDialog {
 
         var fields: contracts.dialogField[] = [{
-            luisEntityName: 'category',
+            entityName: 'category',
             promptText: 'Please enter a category'
         }];
 
@@ -86,12 +90,66 @@ export class botService extends serviceBase implements contracts.IBotService {
             fields: fields
         }
 
+        // var graphDialog: contracts.graphDialog = {
+        //     isLuis: true,
+        //     triggerText: 'SubmitTicket',
+        //     id: 'submitTicketDialog',
+        //     data: d,
+        //     initialSay: 'Okay! So you want to submit a ticket hey? Lets get that sorted'
+        // }
+
         var graphDialog: contracts.graphDialog = {
-            isLuis: true,
-            triggerText: 'SubmitTicket',
+            isLuis: false,
+            triggerRegex: /^subs$/i,
             id: 'submitTicketDialog',
             data: d,
             initialSay: 'Okay! So you want to submit a ticket hey? Lets get that sorted'
+        }
+
+        return graphDialog;
+    }
+
+    getOpeningTimesDialogData():contracts.graphDialog{        
+        var fields: contracts.dialogField[] = [{
+            entityName: 'postcode',
+            promptText: 'Which post code?'
+        }];
+
+        var d:contracts.dialogData = {
+            fields:fields
+        }
+
+        var graphDialog:contracts.graphDialog = {
+            isLuis: true,
+            triggerText: 'ShowOpeningTimes',
+            id: 'openingTimesDialog',
+            data: d,
+            initialSay: `So you're looking for opening times.`,
+            action:{
+                serviceUrlAfter:"https://graphpizza.azurewebsites.net/api/OpeningTimes?code=LEg3pxudN1cxVi/aQvjx9IPQzy1bLJyqVqcfIW9iMVJh5BAdULXF6Q=="
+            }
+        }
+
+        return graphDialog;
+    }
+
+    getStartOrderDialogData():contracts.graphDialog{        
+        var fields: contracts.dialogField[] = [{
+            entityName: 'deliveryMode',
+            promptText: 'Would you like take away or home delivery?',
+            choice:["Home Delivery", "Pickup"]
+        }];
+
+        var d:contracts.dialogData = {
+            fields:fields
+        }
+
+        var graphDialog:contracts.graphDialog = {
+            isLuis: true,
+            triggerText: 'StartOrder',
+            id: 'startOrderDialog',
+            data: d,
+            initialSay: `Okay, let's get us some pizza!`           
         }
 
         return graphDialog;

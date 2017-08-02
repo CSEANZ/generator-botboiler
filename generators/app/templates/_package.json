@@ -1,5 +1,5 @@
 {
-  "name": "funkynode",
+  "name": "<%= name %>",
   "version": "1.0.0",
   "description": "Sample showing a method of working with TypeScript based Azure Functions",
   "main": "index.js",

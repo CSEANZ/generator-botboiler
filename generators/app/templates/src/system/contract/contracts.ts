@@ -36,6 +36,12 @@ interface graphDialog{
     triggerRegex?:RegExp;
     id:string; 
     initialSay?:string;   
+    action?:dialogAction;
+}
+
+interface dialogAction{    
+    serviceUrlAfter?:string;
+    nextDialog?:string;
 }
 
 interface dialogData{
@@ -45,7 +51,12 @@ interface dialogData{
 interface dialogField{
     //text that will ask if the field is missing
     promptText:string;
-    luisEntityName?:string;
+    entityName?:string;
+    choice?:string[];
+}
+
+interface serviceResult{
+    text?:string;
 }
 
 let contractSymbols = {
@@ -58,4 +69,4 @@ let contractSymbols = {
 }
 
 export {contractSymbols, ILogService, IHostService, IBotService, IDialog, INetClient,
-    graphDialog, dialogData, dialogField};
+    graphDialog, dialogData, dialogField, serviceResult};
