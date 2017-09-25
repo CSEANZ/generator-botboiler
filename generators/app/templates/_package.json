@@ -8,7 +8,7 @@
     "build": "tsc",
     "prewatch": "typings install",
     "watch": "tsc -w --project ./src/tsconfig.json",
-    "outputwatch": "nodemon ./output/run/app.js",
+    "outputwatch": "nodemon ./output/run/app.js --delay .5",
     "test": "tsc --project ./tests/tsconfig.json && ava ./output/test/tests/run/**/*.js",
     "testwatchbuild": "tsc -w --project ./tests/tsconfig.json",
     "testwatchava": "ava -w ./output/test/tests/run/**/*.js"
@@ -46,10 +46,15 @@
     "typescript": "^2.3.4"
   },
   "dependencies": {
-    "botbuilder": "^3.8.4",
+    "@types/node": "^8.0.17",
+    "@types/sinon": "^2.3.3",
+    "azure-functions-typescript": "github:christopheranderson/azure-functions-typescript",
+    "botbuilder": "^3.9.0",
     "inversify": "^4.2.0",
     "ncp": "^2.0.0",
     "reflect-metadata": "^0.1.10",
-    "restify": "^4.3.1"
+    "restify": "^4.3.1",
+    "sinon": "^2.4.1",
+    "typescript": "^2.4.2"
   }
 }

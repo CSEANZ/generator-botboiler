@@ -4,13 +4,11 @@ var fs = require('fs');
 var path = require('path');
 var run = require('gulp-run');
 
-gulp.task('gitupdate', ['gitinit'], function () {
-  return run('git submodule update').exec();
+gulp.task('gitupdate',  function () {
+  return run('git submodule update --remote').exec();
 });
 
-gulp.task('gitinit', function () {
-  return run('git submodule init').exec();
-});
+
 
 // update generator
 gulp.task('updategenerator', ['gitupdate'], function () {
